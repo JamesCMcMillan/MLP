@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>PhoneGap</title>
+<script type="text/javascript" charset="utf-8" src="js/phonegap-1.4.1.js"></script>
+<link rel="stylesheet" href="css/jquery.css" />
+<link rel="stylesheet" href="css/custom.css" />
+<script src="js/jquery.js"></script>
+<script src="js/jquery-mobile.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/user.js"></script>
+<script src="js/sync.js"></script>
+<script src="js/lib-sync.js"></script>
+<script>
+$( document ).bind( "mobileinit", function() {
+	$.support.cors = true;
+    $.mobile.allowCrossDomainPages = true;
+});
+
+</script>
+</head>
+<body>
+<div data-role="page">
+	<div data-role="header">
+		<h1>Major League Pong</h1>
+		<a href="options.html" data-role="button" data-icon="gear" data-iconpos="notext" data-transition="slidedown" data-rel="dialog"></a>
+	</div><!-- /header -->
+
+<div data-role="content">
+	<div class='errorDiv' id='errorDiv'>
+	</div>
+		<form id='loginForm' action="">
+			<div class="ui-hide-label">
+				<label for="username">Username:</label>
+				<input type="email" name="username" id="username" value="" placeholder="Username"/>
+			</div> <!-- username -->
+			<br />
+			<div class="ui-hide-label">
+				<label for="password">Password:</label>
+				<input type="password" name="password" id="password" value="" placeholder="Password"/>
+			</div> <!-- password -->
+			<br />
+			<div class="ui-hide-label">
+				<label for="submit">Submit:</label>
+				<input type="button" name="submit" id="submit" value="Log In" onclick="user.logIn();" />
+			</div> <!-- submit -->			
+		</form>
+	</div><!-- /content -->
+</div><!-- /page -->
+</body>
+</html>
