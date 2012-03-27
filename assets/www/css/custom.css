@@ -5,3 +5,13 @@
 	background-color:#ffbad2;
 	display:none;
 }
+.details{
+	font-size:.8em;
+	color:light-gray;
+}
+/* custom icons */
+.footnav .ui-btn .ui-btn-inner { padding-top: 40px !important; }
+.footnav .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
+.ui-icon-beer { background:  url(icons/beer.png) 50% 50% no-repeat;}
+.ui-icon-group { background:  url(icons/group.png) 50% 50% no-repeat;}
+.ui-icon-user { background:  url(icons/user.png) 50% 50% no-repeat;}

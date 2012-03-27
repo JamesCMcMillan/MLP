@@ -9,4 +9,4 @@ sync =
 		    	networkState == Connection.CELL_4G) ? true : false;
 		}
 
-	}
+	};
