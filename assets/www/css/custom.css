@@ -15,3 +15,18 @@
 .ui-icon-beer { background:  url(icons/beer.png) 50% 50% no-repeat;}
 .ui-icon-group { background:  url(icons/group.png) 50% 50% no-repeat;}
 .ui-icon-user { background:  url(icons/user.png) 50% 50% no-repeat;}
+
+#footer{
+	position:absolute; z-index:2;
+	bottom:0; left:0;
+	width:100%;
+}
+#mainPage {
+	position:absolute; z-index:1;
+	top:45px; bottom:60px; left:0;
+	width:92%;
+	overflow:auto;
+}
+.overflow{
+	text-overflow:visble;
+}

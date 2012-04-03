@@ -1,42 +1,66 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>PhoneGap</title>
+	<title>MLPong</title>
 	<script type="text/javascript" charset="utf-8" src="js/phonegap-1.4.1.js"></script>
 	<script src="http://debug.phonegap.com/target/target-script-min.js#mlpong"></script>
 	<link rel="stylesheet" href="css/jquery.css" />
 	<link rel="stylesheet" href="css/custom.css" />
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery-mobile.js"></script>
-	<script src="js/storage.js"></script>
-	<script src="js/user.js"></script>
-	<script src="js/sync.js"></script>
+	<script src="js/framework/jquery.js"></script>
+	<script src="js/framework/jquery-mobile.js"></script>
+	<script src="js/framework/jquery-iscroll.js"></script>
+	<script src="js/lib/storage.js"></script>
+	<script src="js/lib/user.js"></script>
+	<script src="js/lib/sync.js"></script>
 	<script src="js/lib-sync.js"></script>
-	<script>
+	<script src="js/menuMemory.js"></script>
+	<script type="text/javascript">
+		var myScroll;
+		function loaded() {
+			setTimeout(function () {
+				myScroll = new iScroll('mainPage');
+			}, 100);
+		}
+		window.addEventListener('load', loaded, false);
 		$( document ).bind( "mobileinit", function() {
 			$.support.cors = true;
 		    $.mobile.allowCrossDomainPages = true;
 		});
 		document.addEventListener("deviceready", onDeviceReady, false);
-		loadLeagues();
+		jumpToScreen = storage.getLocalKey("jumpTo");
+		switch(jumpToScreen){
+			case "seasons":
+				loadSeasons();
+				break;
+			case "games":
+				loadGames();
+				break;
+			case "teams":
+				loadTeams();
+				break;
+			default:
+				loadLeagues();
+		}
+		storage.removeLocalKey("jumpTo");
+		
+		window.location = 'game.html';
 	</script>
 </head>
 <body>
 <div data-role="page" id="page">
 	<div data-role="header" data-theme="b">
-		<a id='backButton' data-icon="arrow-l" class="ui-btn-left"></a>
+		<a id='backButton' data-icon="arrow-l" style='display:none;' class="ui-btn-left"></a>
 		<a id='logout' onclick="user.logOut()" class='ui-btn-right'>LogOut</a>
-		<h1></h1>
+		<a id='newGame' onclick='goToGamePage()' 
+						data-icon='plus' style='display:none;' data-iconpos='right' class='ui-btn-right'>New Game</a>
+		<h1></h1>	
 	</div><!-- /header -->
 
 	<div id='mainPage' data-role="content">
-		<section>
-			<nav>
-				<ul data-role="listview" data-theme="g" id="contentList"></ul>
-			</nav>
-		</section>
+		<ul data-role="listview" data-theme="g" id="contentList"></ul>
 	</div><!-- /content -->
-	<div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+	
+	<div id="footer" data-role="footer" data-theme="b" style='display:none;'>
 	<div class="footnav" data-role="navbar">
 		<ul>
 			<li><a id='playersTab' data-icon='user' data-shadow="false" data-iconshadow="true" data-corners="false" data-role='button'>Players</a></li>

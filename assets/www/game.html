@@ -1,44 +1,71 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>PhoneGap</title>
-<script type="text/javascript" charset="utf-8" src="js/phonegap-1.4.1.js"></script>
-<link rel="stylesheet" href="css/jquery.css" />
-<link rel="stylesheet" href="css/custom.css" />
-<script src="js/jquery.js"></script>
-<script src="js/jquery-mobile.js"></script>
-<script src="js/lib-sync.js"></script>
+<title>Game</title>
+	<script type="text/javascript" charset="utf-8" src="js/phonegap-1.4.1.js"></script>
+	<script src="http://debug.phonegap.com/target/target-script-min.js#mlpong"></script>
+	<link rel="stylesheet" href="css/jquery.css" />
+	<link rel="stylesheet" href="css/custom.css" />
+	<script src="js/framework/jquery.js"></script>
+	<script src="js/framework/jquery-mobile.js"></script>
+	<script src="js/framework/jquery-iscroll.js"></script>
+	<script src="js/lib/storage.js"></script>
+	<script src="js/lib/game.js"></script>
+	<script src="js/lib/user.js"></script>
+	<script src="js/lib/sync.js"></script>
+	<script src="js/lib-sync.js"></script>
+	<script src="js/menuMemory.js"></script>
 <script>
 $( document ).bind( "mobileinit", function() {
 	$.support.cors = true;
     $.mobile.allowCrossDomainPages = true;
 });
 document.addEventListener("deviceready", onDeviceReady, false);
+var thisGame,shotsInRound,currentRound,roundCount,currentCup,homeAway;
+loadGame();
 </script>
 </head>
 <body>
 <div data-role="page">
 	<div data-role="header">
 		<h1></h1>
-		<a href="options.html" data-role="button" data-icon="gear" data-iconpos="notext" data-transition="slidedown" data-rel="dialog"></a>
 	</div><!-- /header -->
 
 	<div id='mainPage' data-role="content">
-		<div class="ui-grid-b">
+		<div id='whoStarts' class='ui-grid-a'>
+			<div id='homeTeam' class="ui-block-a">
+				<h3 id='homeTeamName'></h3>
+				<div id='player1'></div>
+				<div id='player2'></div>
+				<div id='player3'></div>
+				<a id='home_shoots_first' data-role='button' class='overflow'>Shoots First</a>
+			</div>
+			<div id='awayTeam' class='ui-block-b'>
+				<h3 id='awayTeamName'></h3>
+				<div id='player4'></div>
+				<div id='player5'></div>
+				<div id='player6'></div>
+				<a id='away_shoots_first' data-role='button' class='overflow'>Shoots First</a>
+			</div>
+		</div>
+		<div class="ui-grid-b" id='gameDiv' style='display:none;'>
 			<div class="ui-block-a">
 				<img src="http://thevirtualonlineassistant.com/wp-content/uploads/2011/12/gravatar.jpg" style="height:80px;margin-left:auto;margin-right:auto;" />
-				<a href="index.html" data-role="button">Hit</a><br />
-				<a href="index.html" data-role="button">Miss</a>
+				<div id="first_player"></div>
+				<a id='player1hit'  data-role="button" class='overflow'>Hit</a><br />
+				<a id='player1miss' data-role="button" class='overflow'>Miss</a>
 			</div>
 			<div class="ui-block-b">
 				<img src="http://thevirtualonlineassistant.com/wp-content/uploads/2011/12/gravatar.jpg" style="height:80px;margin-left:auto;margin-right:auto;" />
-				<a href="index.html" data-role="button">Hit</a><br />
-				<a href="index.html" data-role="button">Miss</a>
+				<div id="second_player"></div>
+				<a id='player2hit'  data-role="button" class='overflow'>Hit</a><br />
+				<a id='player2miss' data-role="button" class='overflow'>Miss</a>
 			</div>
 			<div class="ui-block-c">
 				<img src="http://thevirtualonlineassistant.com/wp-content/uploads/2011/12/gravatar.jpg" style="height:80px;margin-left:auto;margin-right:auto;" />
-				<a href="index.html" data-role="button">Hit</a><br />
-				<a href="index.html" data-role="button">Miss</a>
+				<div id="third_player"></div>
+				<a id='player3hit'  data-role="button" class='overflow'>Hit</a><br />
+				<a id='player3miss' data-role="button" class='overflow'>Miss</a>
 			</div>
 		</div><!-- /grid-b -->
 	</div><!-- /content -->

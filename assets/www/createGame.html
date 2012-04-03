@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Create Game</title>
+	<script type="text/javascript" charset="utf-8" src="js/phonegap-1.4.1.js"></script>
+	<script src="http://debug.phonegap.com/target/target-script-min.js#mlpong"></script>
+	<link rel="stylesheet" href="css/jquery.css" />
+	<link rel="stylesheet" href="css/custom.css" />
+	<link rel="stylesheet" href="css/jquery-cal.css" />
+	<script src="js/framework/jquery.js"></script>
+	<script src="js/framework/jquery-mobile.js"></script>
+	<script src="js/lib/storage.js"></script>
+	<script src="js/lib/user.js"></script>
+	<script src="js/lib/sync.js"></script>
+	<script src="js/lib-sync.js"></script>
+	<script src="js/lib/createGame.js"></script>
+	<script src="js/framework/jquery-cal.js"></script>
+	<script type="text/javascript">
+		$( document ).bind( "mobileinit", function() {
+			$.support.cors = true;
+		    $.mobile.allowCrossDomainPages = true;
+		});
+		jQuery.extend(jQuery.mobile.datebox.prototype.options, {
+		    'dateFormat': '%m/%d/%Y',
+		    'timeOutputOverride': '%-l:%M %P'
+		});
+		document.addEventListener("deviceready", onDeviceReady, false);
+		loadAllTeams();
+	</script>
+</head>
+<body>
+<div data-role="page" id="page">
+	<div data-role="header" data-theme="b">
+		<a id='backButton' data-icon="arrow-l" onclick="goBack();" class="ui-btn-left">Back</a>
+		<h1></h1>
+	</div><!-- /header -->
+	<div id='mainPage2' data-role="content">	
+		<form action="form.php" method="post">	
+			<!-- Game Date Picker -->
+			<label for="game_date">Game Date</label>
+				<input name="game_date" id="game_date" type="date" data-role="datebox" data-options='{"mode": "datebox"}' data-mini="true">
+			
+			<!-- Game Time Picker -->
+			<label for="game_time">Game Time</label>
+				<input name="game_time" id="game_time" type="date" data-role="datebox" data-options='{"mode": "timebox", "timeFormatOverride": 12}' data-mini="true">
+			
+			<!-- Home Team Picker -->
+			<div data-role="fieldcontain">
+				<label for="home_team" class="select">Home Team</label>
+				<select name="home_team" id="home_team" data-mini="true"></select>
+
+				<!-- Player 1 Picker -->
+					<!-- <label for="player1_picker" class="select" class="ui-hide-label">Player 1</label> -->
+					<select name="player1_picker" class="playerpicker" id="player1_picker" data-mini="true"></select>
+	
+				<!-- Player 2 Picker -->
+					<!-- <label for="player2_picker" class="select" class="ui-hide-label">Player 2</label> -->
+					<select name="player2_picker" class="playerpicker" id="player2_picker" data-mini="true"></select>
+				
+				<!-- Player 3 Picker -->
+					<!-- <label for="player3_picker" class="select" class="ui-hide-label">Player 3</label> -->
+					<select name="player3_picker" class="playerpicker" id="player3_picker" data-mini="true"></select>
+				</div>
+			
+			<!-- Away Team Picker -->
+			<div data-role="fieldcontain">
+				<label for="away_team" class="select">Away Team</label>
+				<select name="away_team" id="away_team" data-mini="true"></select>
+
+				<!-- Player 4 Picker -->
+					<select name="player4_picker" class="playerpicker" id="player4_picker" data-mini="true"></select>
+	
+				<!-- Player 5 Picker -->
+					<select name="player5_picker" class="playerpicker" id="player5_picker" data-mini="true"></select>
+				
+				<!-- Player 6 Picker -->
+					<select name="player6_picker" class="playerpicker" id="player6_picker" data-mini="true"></select>
+			</div>
+			<input data-theme='e' onclick="createGame();" type='button' value='Create Game' />
+		</form>
+	</div><!-- /content -->
+</div><!-- /page -->
+</body>
+</html>
