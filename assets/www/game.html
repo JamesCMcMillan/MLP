@@ -32,13 +32,13 @@ loadGame();
 </script>
 </head>
 <body>
-<div data-role="page">
+<div data-role="page" class='maxHeight'>
 	<div data-role="header">
-		<h1></h1>
+		<h1 id='h1header' style='display:none;'><span id='currentCupLabel'>0</span>/10</h1>
 		<a id='newGame' onclick='quitGame()' data-icon='delete' data-iconpos='right' class='ui-btn-right'>Cancel Game</a>
 	</div><!-- /header -->
 
-	<div id='mainGamePage' data-role="content">
+	<div id='mainGamePage' class='maxHeight' data-role="content">
 		<div id='whoStarts' class='ui-grid-a'>
 			<div id='homeTeam' class="ui-block-a center">
 				<h3 id='homeTeamName'></h3>
@@ -64,6 +64,7 @@ loadGame();
 					<a id='player1miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
 				</div>
 				<div id='player1undodiv'>
+					<div id='player1cup'></div>
 					<a id='player1undo' data-role="button" class='overflow' data-inline="true">Undo</a>
 				</div>
 			</div>
@@ -75,6 +76,7 @@ loadGame();
 					<a id='player2miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
 				</div>
 				<div id='player2undodiv'>
+					<div id='player2cup'></div>
 					<a id='player2undo' data-role="button" class='overflow' data-inline="true">Undo</a>
 				</div>
 			</div>
@@ -86,6 +88,7 @@ loadGame();
 					<a id='player3miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
 				</div>
 				<div id='player3undodiv'>
+					<div id='player3cup'></div>
 					<a id='player3undo' data-role="button" data-inline="true" class='overflow'>Undo</a>
 				</div>
 			</div>

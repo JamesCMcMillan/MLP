@@ -1,5 +1,6 @@
 function shootsFirst(homeOrAway){
 	homeAway = homeOrAway;
+	$('#h1header').show();
 	console.log("@shootsFirst - " + homeOrAway);
 	$('#whoStarts').hide();
 	teamUp();
@@ -10,17 +11,19 @@ function shootsFirst(homeOrAway){
 }
 
 function getGravatarURL(email_hash){
-	return "http://www.gravatar.com/avatar/" + thisGame.home_team.players[0].email_hash + "?d=monsterid";
+	return "http://www.gravatar.com/avatar/" + email_hash + "?d=monsterid&r=x";
+}
+
+function shotFiredUIAction(player){
+	$('#' + player + 'div').addClass('shotbg');
+	$('#' + player + 'buttonsdiv').hide();
+	$('#' + player + 'undodiv').show();
 }
 
 function teamUp(){
 	console.log("@teamUp");
 	bringBackCounter = 0;
-	$('.hitOrMissButton').removeClass('ui-disabled')
-						 .unbind('click')
-						 .attr('data-theme','a')
-						 .removeClass('ui-body-e')
-						 .addClass('ui-body-a').trigger('create');
+	$('.hitOrMissButton').unbind('click');
 	
 	$('#player1div,#player2div,#player3div').removeClass('shotbg');
 	$('#player1undodiv,#player2undodiv,#player3undodiv').hide();
@@ -32,81 +35,34 @@ function teamUp(){
 		$('#first_player').text(thisGame.home_team.players[0].name);
 		$('#second_player').text(thisGame.home_team.players[1].name);
 		$('#third_player').text(thisGame.home_team.players[2].name);
-		$('#player1image').attr("src",getGravatarURL(thisGame.home_team.players[0].email_hash));
-		$('#player2image').attr("src",getGravatarURL(thisGame.home_team.players[1].email_hash));
-		$('#player3image').attr("src",getGravatarURL(thisGame.home_team.players[2].email_hash));
+		$('#player1image').removeAttr("src").attr("src",getGravatarURL(thisGame.home_team.players[0].email_hash));
+		$('#player2image').removeAttr("src").attr("src",getGravatarURL(thisGame.home_team.players[1].email_hash));
+		$('#player3image').removeAttr("src").attr("src",getGravatarURL(thisGame.home_team.players[2].email_hash));
 		
 		$('#player1hit').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player1div').addClass('shotbg');
-									$('#player1buttonsdiv').hide();
-									$('#player1undodiv').show();
-									
-									$('#player1miss').addClass('ui-disabled');
+									shotFiredUIAction('player1');
 									addShot('hit',thisGame.home_team.players[0].id, thisGame.home_team.id);
 								});
 		$('#player2hit').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player2div').addClass('shotbg');
-									$('#player2buttonsdiv').hide();
-									$('#player2undodiv').show();
-									
-									$('#player2miss').addClass('ui-disabled');
+									shotFiredUIAction('player2');									
 									addShot('hit',thisGame.home_team.players[1].id, thisGame.home_team.id);
 								});
 		$('#player3hit').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player3div').addClass('shotbg');
-									$('#player3buttonsdiv').hide();
-									$('#player3undodiv').show();
-									
-									$('#player3miss').addClass('ui-disabled');
+									shotFiredUIAction('player3');
 									addShot('hit',thisGame.home_team.players[2].id, thisGame.home_team.id);
 								});
 		
 		$('#player1miss').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
+									shotFiredUIAction('player1');
 									
-									$('#player1div').addClass('shotbg');
-									$('#player1buttonsdiv').hide();
-									$('#player1undodiv').show();
-									
-									$('#player1hit').addClass('ui-disabled');
 									addShot('miss',thisGame.home_team.players[0].id, thisGame.home_team.id);
 								});
 		$('#player2miss').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player2div').addClass('shotbg');
-									$('#player2buttonsdiv').hide();
-									$('#player2undodiv').show();
-									
-									$('#player2hit').addClass('ui-disabled');
+									shotFiredUIAction('player2');									
 									addShot('miss',thisGame.home_team.players[1].id, thisGame.home_team.id);
 								});
 		$('#player3miss').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player3div').addClass('shotbg');
-									$('#player3buttonsdiv').hide();
-									$('#player3undodiv').show();
-									
-									$('#player3hit').addClass('ui-disabled');
+									shotFiredUIAction('player3');
 									addShot('miss',thisGame.home_team.players[2].id, thisGame.home_team.id);
 								});
 	}else{ 
@@ -115,81 +71,33 @@ function teamUp(){
 		$('#first_player').text(thisGame.away_team.players[0].name);
 		$('#second_player').text(thisGame.away_team.players[1].name);
 		$('#third_player').text(thisGame.away_team.players[2].name);
-		$('#player1image').attr("src",getGravatarURL(thisGame.away_team.players[0].email_hash));
-		$('#player2image').attr("src",getGravatarURL(thisGame.away_team.players[1].email_hash));
-		$('#player3image').attr("src",getGravatarURL(thisGame.away_team.players[2].email_hash));
+		$('#player1image').removeAttr("src").attr("src",getGravatarURL(thisGame.away_team.players[0].email_hash));
+		$('#player2image').removeAttr("src").attr("src",getGravatarURL(thisGame.away_team.players[1].email_hash));
+		$('#player3image').removeAttr("src").attr("src",getGravatarURL(thisGame.away_team.players[2].email_hash));
 		
 		$('#player1hit').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player1div').addClass('shotbg');
-									$('#player1buttonsdiv').hide();
-									$('#player1undodiv').show();
-									
-									$('#player1miss').addClass('ui-disabled');
+									shotFiredUIAction('player1');									
 									addShot('hit',thisGame.away_team.players[0].id, thisGame.away_team.id);
 								});
 		$('#player2hit').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player2div').addClass('shotbg');
-									$('#player2buttonsdiv').hide();
-									$('#player2undodiv').show();
-									
-									$('#player2miss').addClass('ui-disabled');
+									shotFiredUIAction('player2');									
 									addShot('hit',thisGame.away_team.players[1].id, thisGame.away_team.id);
 								});
 		$('#player3hit').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player3div').addClass('shotbg');
-									$('#player3buttonsdiv').hide();
-									$('#player3undodiv').show();
-									
-									$('#player3miss').addClass('ui-disabled');
+									shotFiredUIAction('player3');
 									addShot('hit',thisGame.away_team.players[2].id, thisGame.away_team.id);
 								});
 		
-		$('#player1miss').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player1div').addClass('shotbg');
-									$('#player1buttonsdiv').hide();
-									$('#player1undodiv').show();
-									
-									$('#player1hit').addClass('ui-disabled');
+		$('#player1miss').click(function(){									
+									shotFiredUIAction('player1');
 									addShot('miss',thisGame.away_team.players[0].id, thisGame.away_team.id);
 								});
 		$('#player2miss').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player2div').addClass('shotbg');
-									$('#player2buttonsdiv').hide();
-									$('#player2undodiv').show();
-									
-									$('#player2hit').addClass('ui-disabled');
+									shotFiredUIAction('player2');
 									addShot('miss',thisGame.away_team.players[1].id, thisGame.away_team.id);
 								});
 		$('#player3miss').click(function(){
-									$(this).addClass('ui-disabled')
-									.attr('data-theme','e').removeClass('ui-body-a')
-									.addClass('ui-body-e').trigger('create');
-									
-									$('#player3div').addClass('shotbg');
-									$('#player3buttonsdiv').hide();
-									$('#player3undodiv').show();
-									
-									$('#player3hit').addClass('ui-disabled');
+									shotFiredUIAction('player3');									
 									addShot('miss',thisGame.away_team.players[2].id, thisGame.away_team.id);
 								});
 	}
@@ -222,7 +130,7 @@ function loadGame(){
 function newRound(){
 	console.log("@newRound");
 	var d = new Date();
-	currentRound = "r" + d.getTime();
+	currentRound = d.getTime().toString();
 	roundCount++;
 	console.log("new round:" + currentRound + " is the #" + roundCount + " round");
 	thisGame.rounds_attributes[currentRound] = {
@@ -242,6 +150,7 @@ function addShot(hitOrMiss, player_id, team_id){
 	var cup;
 	if (hitOrMiss == 'hit'){
 		cup = currentCup;
+		$('#currentCupLabel').text(currentCup);
 		currentCup++;
 		bringBackCounter++;
 		//alert("bringBackCounter = " + bringBackCounter);
@@ -254,7 +163,7 @@ function addShot(hitOrMiss, player_id, team_id){
 	}
 	
 	var d = new Date();
-	shotId = "s" + d.getTime();
+	shotId = d.getTime().toString();
 	
 	thisShot = {
 					cup: cup,
@@ -266,7 +175,7 @@ function addShot(hitOrMiss, player_id, team_id){
 	};
 	
 	console.log(JSON.stringify(thisShot));
-	eval("thisGame.rounds_attributes." + currentRound + ".shots_attributes['" + shotId + "'] = thisShot;");
+	eval("thisGame.rounds_attributes['" + currentRound + "'].shots_attributes['" + shotId + "'] = thisShot;");
 	console.log("This game:   " + JSON.stringify(thisGame));
 	console.log("added thisShot onto current round");
 	
@@ -311,6 +220,18 @@ function addShot(hitOrMiss, player_id, team_id){
 	if (cup == 10){
 		alert("End of game!");
 		console.log("Game Data: " + JSON.stringify(thisGame));
+		$.ajax({
+			type : 'PUT',
+			url : 'http://mlpong.herokuapp.com' + storage.getLocalKey('currentSeasonUrl') + '/games/' + thisGame.id + '?auth_token=' + storage.getLocalKey('authToken'),
+			contentType : 'application/json',
+			headers: {
+		        "Accept" : "application/json"
+		    },
+			data : JSON.stringify(thisGame),
+			success : function(data) {
+				alert("Data:"+JSON.stringify(data));
+			}
+		});
 		quitGame();
 	}
 }
