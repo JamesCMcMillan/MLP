@@ -23,10 +23,29 @@
 }
 #mainPage {
 	position:absolute; z-index:1;
-	top:45px; bottom:60px; left:0;
-	width:92%;
+	top:40px; bottom:60px; left:0;
+	width:91%;
 	overflow:auto;
+}
+#mainGamePage {
+	position:absolute; z-index:1;
+	top:40px; bottom:0px; left:0;
+	width:91%;
+	overflow:auto;
+	padding:0px;
+	height:100%;
+}
+.maxHeight{
+	height:100%;
 }
 .overflow{
 	text-overflow:visble;
+}
+.center{
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+}
+.shotbg{
+	background-color:#696969;
 }

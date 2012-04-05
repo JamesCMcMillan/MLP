@@ -21,7 +21,13 @@ $( document ).bind( "mobileinit", function() {
     $.mobile.allowCrossDomainPages = true;
 });
 document.addEventListener("deviceready", onDeviceReady, false);
-var thisGame,shotsInRound,currentRound,roundCount,currentCup,homeAway;
+var thisGame; // The instance of the game currently being scored
+var shotsInRound; // 1 - 6, the current number of shots thrown in round
+var currentRound; // The round ID, a string 'r##########'
+var roundCount; // the number of rounds already played
+var currentCup; // the number cup that people are shooting for
+var homeAway; // which team is currently up
+var bringBackCounter; // 0 - 3, how many shots in a row have been made by a team
 loadGame();
 </script>
 </head>
@@ -29,43 +35,59 @@ loadGame();
 <div data-role="page">
 	<div data-role="header">
 		<h1></h1>
+		<a id='newGame' onclick='quitGame()' data-icon='delete' data-iconpos='right' class='ui-btn-right'>Cancel Game</a>
 	</div><!-- /header -->
 
-	<div id='mainPage' data-role="content">
+	<div id='mainGamePage' data-role="content">
 		<div id='whoStarts' class='ui-grid-a'>
-			<div id='homeTeam' class="ui-block-a">
+			<div id='homeTeam' class="ui-block-a center">
 				<h3 id='homeTeamName'></h3>
 				<div id='player1'></div>
 				<div id='player2'></div>
 				<div id='player3'></div>
-				<a id='home_shoots_first' data-role='button' class='overflow'>Shoots First</a>
+				<a id='home_shoots_first' data-role='button' data-inline="true" class='overflow'>Shoots First</a>
 			</div>
-			<div id='awayTeam' class='ui-block-b'>
+			<div id='awayTeam' class='ui-block-b center'>
 				<h3 id='awayTeamName'></h3>
 				<div id='player4'></div>
 				<div id='player5'></div>
 				<div id='player6'></div>
-				<a id='away_shoots_first' data-role='button' class='overflow'>Shoots First</a>
+				<a id='away_shoots_first' data-role='button' data-inline="true" class='overflow'>Shoots First</a>
 			</div>
 		</div>
 		<div class="ui-grid-b" id='gameDiv' style='display:none;'>
-			<div class="ui-block-a">
-				<img src="http://thevirtualonlineassistant.com/wp-content/uploads/2011/12/gravatar.jpg" style="height:80px;margin-left:auto;margin-right:auto;" />
+			<div id='player1div' class="ui-block-a center maxHeight">
+				<img id='player1image' style="height:80px;margin-left:auto;margin-right:auto;" />
 				<div id="first_player"></div>
-				<a id='player1hit' class='hitOrMissButton' data-role="button" class='overflow'>Hit</a><br />
-				<a id='player1miss' class='hitOrMissButton' data-role="button" class='overflow'>Miss</a>
+				<div id='player1buttonsdiv'>
+					<a id='player1hit' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Hit</a>
+					<a id='player1miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
+				</div>
+				<div id='player1undodiv'>
+					<a id='player1undo' data-role="button" class='overflow' data-inline="true">Undo</a>
+				</div>
 			</div>
-			<div class="ui-block-b">
-				<img src="http://thevirtualonlineassistant.com/wp-content/uploads/2011/12/gravatar.jpg" style="height:80px;margin-left:auto;margin-right:auto;" />
+			<div id='player2div' class="ui-block-b center maxHeight">
+				<img id='player2image' style="height:80px;margin-left:auto;margin-right:auto;" />
 				<div id="second_player"></div>
-				<a id='player2hit' class='hitOrMissButton' data-role="button" class='overflow'>Hit</a><br />
-				<a id='player2miss' class='hitOrMissButton' data-role="button" class='overflow'>Miss</a>
+				<div id='player2buttonsdiv'>
+					<a id='player2hit' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Hit</a>
+					<a id='player2miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
+				</div>
+				<div id='player2undodiv'>
+					<a id='player2undo' data-role="button" class='overflow' data-inline="true">Undo</a>
+				</div>
 			</div>
-			<div class="ui-block-c">
-				<img src="http://thevirtualonlineassistant.com/wp-content/uploads/2011/12/gravatar.jpg" style="height:80px;margin-left:auto;margin-right:auto;" />
+			<div id='player3div' class="ui-block-c center maxHeight">
+				<img id='player3image' style="height:80px;margin-left:auto;margin-right:auto;" />
 				<div id="third_player"></div>
-				<a id='player3hit' class='hitOrMissButton' data-role="button" class='overflow'>Hit</a><br />
-				<a id='player3miss' class='hitOrMissButton' data-role="button" class='overflow'>Miss</a>
+				<div id='player3buttonsdiv'>
+					<a id='player3hit' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Hit</a>
+					<a id='player3miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
+				</div>
+				<div id='player3undodiv'>
+					<a id='player3undo' data-role="button" data-inline="true" class='overflow'>Undo</a>
+				</div>
 			</div>
 		</div><!-- /grid-b -->
 	</div><!-- /content -->

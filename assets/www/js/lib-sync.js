@@ -18,9 +18,6 @@ $.ajaxSetup({
 function showFooter(){
 	console.log("Showing footer");
 	$('#backButton').click(function(){loadSeasons();}).button();
-	$('#playersTab').click(function(){loadPlayers();});
-	$('#gamesTab').click(function(){loadGames();});
-	$('#teamsTab').click(function(){loadTeams();});
 	$('#footer').show();
 }
 
@@ -76,6 +73,7 @@ function loadTeam(team_url){}
 function loadTeams(){
 	console.log("@loadTeams");
 	season_url = storage.getLocalKey('currentSeasonUrl');
+	league_url = storage.getLocalKey('currentLeagueUrl');
 	if (!user.isLoggedIn()) {return;}
 	$.ajax({
 		url : 'http://mlpong.herokuapp.com' + season_url + '/teams.json',
@@ -89,11 +87,15 @@ function loadTeams(){
 		}
 	});
 	showFooter();
+	$("#backButton .ui-btn-text").text("Seasons");
+	$('#backButton').show().click(function(){loadSeasons(league_url)}).button();
+	$('#newGame').hide();
 }
 
 function loadPlayers(){
 	console.log("@loadPlayers");
 	season_url = storage.getLocalKey('currentSeasonUrl');
+	league_url = storage.getLocalKey('currentLeagueUrl');
 	if (!user.isLoggedIn()) {return;}
 	$.ajax({
 		url : 'http://mlpong.herokuapp.com' + season_url + '/players.json',
@@ -111,12 +113,15 @@ function loadPlayers(){
 		}
 	});
 	$("#backButton .ui-btn-text").text("Seasons");
+	$('#backButton').show().click(function(){loadSeasons(league_url)}).button();
 	showFooter();
+	$('#newGame').hide();
 }
 
 function loadGames(){
 	console.log('@loadGames');
 	season_url = storage.getLocalKey('currentSeasonUrl');
+	league_url = storage.getLocalKey('currentLeagueUrl');
 	if (!user.isLoggedIn()) {return;}
 	$.ajax({
 		url : 'http://mlpong.herokuapp.com' + season_url + '/games.json',
@@ -147,11 +152,11 @@ function loadGames(){
 			$('#contentList').listview('refresh');
 		}
 	});
-	$("#backButton .ui-btn-text").text("Seasons");
-	$('#backButton').click(function(){loadSeasons(league_url)}).button();
-	$('#logout').hide();
-	$('#newGame').show();
 	showFooter();
+	$("#backButton .ui-btn-text").text("Seasons");
+	$('#backButton').show().click(function(){loadSeasons(league_url)}).button();
+	$('#logout').hide().button();
+	$('#newGame').show().button();
 }
 function goToGamePage(){
 	window.location='createGame.html';
@@ -159,6 +164,7 @@ function goToGamePage(){
 
 function loadLeagues(){
 	console.log('@loadLeagues');
+	$('#footer').hide();
 	if (!user.isLoggedIn()) {return;}
 	$('#footer').hide();
 	$('#backButton').hide().button();

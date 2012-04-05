@@ -42,8 +42,6 @@
 				loadLeagues();
 		}
 		storage.removeLocalKey("jumpTo");
-		
-		window.location = 'game.html';
 	</script>
 </head>
 <body>
@@ -60,12 +58,12 @@
 		<ul data-role="listview" data-theme="g" id="contentList"></ul>
 	</div><!-- /content -->
 	
-	<div id="footer" data-role="footer" data-theme="b" style='display:none;'>
+	<div id="footer" data-role="footer" data-theme="b">
 	<div class="footnav" data-role="navbar">
 		<ul>
-			<li><a id='playersTab' data-icon='user' data-shadow="false" data-iconshadow="true" data-corners="false" data-role='button'>Players</a></li>
-			<li><a id='teamsTab' data-icon='group' data-shadow="false" data-iconshadow="true" data-corners="false" data-role='button'>Teams</a></li>
-			<li><a id='gamesTab' data-icon='beer' data-shadow="false" data-iconshadow="true" data-corners="false" data-role='button'>Games</a></li>
+			<li><a id='playersTab' onclick='loadPlayers();' data-icon='user' data-shadow="false" data-iconshadow="true" data-corners="false" data-role='button'>Players</a></li>
+			<li><a id='teamsTab' onclick='loadTeams();' data-icon='group' data-shadow="false" data-iconshadow="true" data-corners="false" data-role='button'>Teams</a></li>
+			<li><a id='gamesTab' onclick='loadGames();' data-icon='beer' data-shadow="false" data-iconshadow="true" data-corners="false" data-role='button'>Games</a></li>
 		</ul>
 	</div><!-- /navbar -->
 	</div><!-- /footer -->
