@@ -21,7 +21,7 @@ function createGame(){
 	console.log(JSON.stringify(newGame));
 	$.ajax({
 		type : 'POST',
-		url : 'http://mlpong.herokuapp.com' + storage.getLocalKey('currentSeasonUrl') + '/games?auth_token=' + storage.getLocalKey('authToken'),
+		url : storage.getLocalKey('hostUrl') + storage.getLocalKey('currentSeasonUrl') + '/games?auth_token=' + storage.getLocalKey('authToken'),
 		contentType : 'application/json',
 		headers: {
 	        "Accept" : "application/json"

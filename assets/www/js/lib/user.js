@@ -8,7 +8,7 @@ user =
 			$('#errorDiv').show().text('Please enter a username and password');
 		}
 		$.ajax({
-			url:'http://mlpong.herokuapp.com/tokens.json',
+			url: storage.getLocalKey('hostUrl') +  '/tokens.json',
 			data:{'email':username, 'password':password},
 			dataType:'json',
 			type:'POST',
@@ -25,9 +25,13 @@ user =
 	},
 	logOut : function(){
 		storage.removeLocalKey("authToken");
+		storage.removeLocalKey("jumpTo");
 		window.location = "login.html";
 	},
 	isLoggedIn: function(){
 		return (storage.getLocalKey("authToken") != null) ? true : false;
+	},
+	getGravatarURL: function (email_hash){
+		return "http://www.gravatar.com/avatar/" + email_hash + "?d=monsterid&r=x";
 	}
 };

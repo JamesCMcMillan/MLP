@@ -1,7 +1,7 @@
 $.ajaxSetup({
-	beforeSend: function() { $.mobile.showPageLoadingMsg(); }, //Show spinner
+	beforeSend: function() { $('#loader').show(); }, //Show spinner
     complete: function() { 
-    	$.mobile.hidePageLoadingMsg(); 
+    	$('#loader').hide(); 
     	if (typeof(myScroll) != "undefined" && myScroll !== null){
     		setTimeout(function () {
     			myScroll.refresh();
@@ -24,7 +24,7 @@ function showFooter(){
 function loadAllTeams(){
 	season_url = storage.getLocalKey('currentSeasonUrl');
 	$.ajax({
-		url : 'http://mlpong.herokuapp.com' + season_url + '/teams.json',
+		url : storage.getLocalKey('hostUrl') + season_url + '/teams.json',
 		success : function(data) {
 			var options = '';
 			$.each(data,function(key,value){
@@ -41,7 +41,7 @@ function loadAllUsers(){
 	storage.setLocalKey('currentSeasonId',parseInt(match[0], 10));
 	
 	$.ajax({
-		url : 'http://mlpong.herokuapp.com' + season_url + '/players.json',
+		url : storage.getLocalKey('hostUrl') + season_url + '/players.json',
 		success : function(data) {
 			var options = '';
 			$.each(data,function(key,value){
@@ -49,7 +49,7 @@ function loadAllUsers(){
 			});
 			$('.playerpicker').html(options).selectmenu("refresh");
 			$.ajax({
-				url : 'http://mlpong.herokuapp.com' + season_url + '/teams/' + $('#home_team').val() + '.json',
+				url : storage.getLocalKey('hostUrl') + season_url + '/teams/' + $('#home_team').val() + '.json',
 				success : function(data){
 					$('#player1_picker').val(data.players[0].id).selectmenu("refresh");
 					$('#player2_picker').val(data.players[1].id).selectmenu("refresh");
@@ -57,7 +57,7 @@ function loadAllUsers(){
 				}
 			});
 			$.ajax({
-				url : 'http://mlpong.herokuapp.com' + season_url + '/teams/' + $('#away_team').val() + '.json',
+				url : storage.getLocalKey('hostUrl') + season_url + '/teams/' + $('#away_team').val() + '.json',
 				success : function(data){
 					$('#player4_picker').val(data.players[0].id).selectmenu("refresh");
 					$('#player5_picker').val(data.players[1].id).selectmenu("refresh");
@@ -68,22 +68,32 @@ function loadAllUsers(){
 	});
 }
 
-function loadTeam(team_url){}
+function loadTeam(team_id, team){
+	storage.setLocalKey('currentTeamId', team_id);
+	storage.setLocalKey('currentTeamInfo', JSON.stringify(team));
+	storage.setLocalKey('jumpTo', "teams");
+	window.location = 'team.html';
+}
 
 function loadTeams(){
 	console.log("@loadTeams");
 	season_url = storage.getLocalKey('currentSeasonUrl');
+	season_id = storage.getLocalKey('currentSeasonId');
 	league_url = storage.getLocalKey('currentLeagueUrl');
+	
+	menuCacher.loadMenu('teams','teams'+season_id);	
+	
 	if (!user.isLoggedIn()) {return;}
 	$.ajax({
-		url : 'http://mlpong.herokuapp.com' + season_url + '/teams.json',
+		url : storage.getLocalKey('hostUrl') + season_url + '/teams.json',
 		success : function(data) {
-			$('#contentList').empty();
-			$.each(data,function(key,value){
-				var elem = $('<li id="team' + value.id + '"><a>' + value.name + '</a></li>')
-						   .click(function(){loadTeam(value.url);}).appendTo($('#contentList'));
-			});
-			$('#contentList').listview('refresh');
+			if (JSON.stringify(data) != JSON.stringify(menuMemory.load('teams'+season_id))){
+				console.log("teams have changed!");
+				$('#contentList').empty();
+				eachFunc.teams(data);
+				$('#contentList').listview('refresh');
+				menuMemory.save('teams'+season_id, data);
+			}
 		}
 	});
 	showFooter();
@@ -92,24 +102,32 @@ function loadTeams(){
 	$('#newGame').hide();
 }
 
+function loadPlayer(player_id, player){
+	storage.setLocalKey('currentPlayerInfo', JSON.stringify(player));
+	storage.setLocalKey('currentPlayerId', player_id);
+	storage.setLocalKey('jumpTo', "players");
+	window.location = 'player.html';
+}
+
 function loadPlayers(){
 	console.log("@loadPlayers");
-	season_url = storage.getLocalKey('currentSeasonUrl');
-	league_url = storage.getLocalKey('currentLeagueUrl');
 	if (!user.isLoggedIn()) {return;}
+	
+	season_url = storage.getLocalKey('currentSeasonUrl');
+	season_id = storage.getLocalKey('currentSeasonId');
+	league_url = storage.getLocalKey('currentLeagueUrl');
+	
+	menuCacher.loadMenu('players','players'+season_id);	
+	
 	$.ajax({
-		url : 'http://mlpong.herokuapp.com' + season_url + '/players.json',
+		url : storage.getLocalKey('hostUrl') + season_url + '/players.json',
 		success : function(data) {
-			$('#contentList').empty();
-			$.each(data,function(key,value){
-				var elem = $('<li id="player' + value.id + '"><a>' + value.name + 
-							'<span id="playerstory' + value.id + '" class="details"></span></a></li>')
-						   .click(function(){loadGame();}).appendTo($('#contentList'));
-				if (value.story != null && value.story != ""){
-					$('#playerstory'+value.id).html('<br />' + value.story);
-				}
-			});
-			$('#contentList').listview('refresh');
+			if (JSON.stringify(data) != JSON.stringify(menuMemory.load('players'+season_id))){
+				$('#contentList').empty();
+				eachFunc.players(data);
+				$('#contentList').listview('refresh');
+				menuMemory.save('players'+season_id, data);
+			}
 		}
 	});
 	$("#backButton .ui-btn-text").text("Seasons");
@@ -121,35 +139,21 @@ function loadPlayers(){
 function loadGames(){
 	console.log('@loadGames');
 	season_url = storage.getLocalKey('currentSeasonUrl');
+	season_id = storage.getLocalKey('currentSeasonId');
 	league_url = storage.getLocalKey('currentLeagueUrl');
 	if (!user.isLoggedIn()) {return;}
+	
+	menuCacher.loadMenu('games','games'+season_id);
+	
 	$.ajax({
-		url : 'http://mlpong.herokuapp.com' + season_url + '/games.json',
+		url : storage.getLocalKey('hostUrl') + season_url + '/games.json',
 		success : function(data) {
-			$('#contentList').empty();
-			$.each(data,function(key,value){
-				var elem = $('<li id="game' + value.id + '"><a><span class="details">' +
-						value.date + "  " + value.time + "</span><br /> " +
-						"<span id='" + value.id + "away_team'>" +
-						value.away_team.name + "</span><br />@ " + 
-						"<span id='" + value.id + "home_team'>" +
-						value.home_team.name + '</span></a></li>')
-						   .click(function(){
-							   	storage.setLocalKey('currentGameUrl', value.url); 
-							   	window.location='game.html';})
-						   .appendTo($('#contentList'));
-				if (value.rounds_count != 0){
-					$('<span class="ui-li-count ">' + value.rounds_count + '</span>').appendTo(elem);
-				}
-				if (value.winner_id != null){
-					if (value.winner_id == value.away_team.id){
-						$('#'+value.id+'away_team').css('font-weight','bold');
-					}else if (value.winner_id == value.home_team.id){
-						$('#'+value.id+'home_team').css('font-weight','bold');
-					}
-				}
-			});
-			$('#contentList').listview('refresh');
+			if (JSON.stringify(data) != JSON.stringify(menuMemory.load('games'+season_id))){
+				$('#contentList').empty();
+				eachFunc.games(data);
+				$('#contentList').listview('refresh');
+				menuMemory.save('games'+season_id, data);
+			}
 		}
 	});
 	showFooter();
@@ -164,49 +168,49 @@ function goToGamePage(){
 
 function loadLeagues(){
 	console.log('@loadLeagues');
-	$('#footer').hide();
 	if (!user.isLoggedIn()) {return;}
+	
 	$('#footer').hide();
 	$('#backButton').hide().button();
+	$('#newGame').hide();
+	
+	menuCacher.loadMenu('leagues','leagues');
 	$.ajax({
-		url:'http://mlpong.herokuapp.com/leagues.json',
+		url:storage.getLocalKey('hostUrl') + '/leagues.json',
 		success:function(data){
-			$('#contentList').empty();
-			$.each(data,function(key,value){
-				var elem = $('<li><a>' + value.name + '</a></li>')
-							.click(function(){
-								storage.setLocalKey('currentLeagueUrl', value.url);
-								storage.setLocalKey('currentLeagueId', value.id);
-								storage.setLocalKey('currentLeagueSlug', value.slug);
-								loadSeasons();})
-							.appendTo($('#contentList'));
-			});
-			$('#contentList').listview('refresh');
+			if (JSON.stringify(data) != JSON.stringify(menuMemory.load('leagues'))){
+				alert("Change in leagues!");
+				$('#contentList').empty();
+				eachFunc.leagues(data);
+				$('#contentList').listview('refresh');
+				menuMemory.save('leagues', data);
+			}
 		}
 	});
 }
 		
 function loadSeasons() {
 	console.log('@loadSeasons');
-	league_url = storage.getLocalKey('currentLeagueUrl');
 	if (!user.isLoggedIn()) {return;}
+	league_url = storage.getLocalKey('currentLeagueUrl');
+	league_id = storage.getLocalKey('currentLeagueId');
+	
+	menuCacher.loadMenu('seasons','seasons'+league_id);
+	
 	$.ajax({
-		url : 'http://mlpong.herokuapp.com' + league_url + '.json',
+		url : storage.getLocalKey('hostUrl') + league_url + '.json',
 		success : function(data) {
-			$('#contentList').empty();
-			$.each(data.seasons,function(key,value){
-				var elem = $('<li><a>' + value.name + '</a></li>')
-							.click(function(){
-								storage.setLocalKey('currentSeasonId',value.id);
-								storage.setLocalKey('currentSeasonUrl',value.url);
-								loadPlayers();})
-							.appendTo($('#contentList'));
-			});
-			$('#contentList').listview('refresh');
+			if (JSON.stringify(data.seasons) != JSON.stringify(menuMemory.load('seasons'+league_id))){
+				$('#contentList').empty();
+				eachFunc.seasons(data.seasons);
+				$('#contentList').listview('refresh');
+				menuMemory.save('seasons'+league_id, data.seasons);
+			}
 		}
 	});
 	$("#backButton .ui-btn-text").text("Leagues");
 	$('#backButton').click(function(){loadLeagues();}).show().button();
+	$('#newGame').hide();
 	$('#footer').hide();
 }
 
@@ -214,6 +218,4 @@ function onDeviceReady() {
     if (!user.isLoggedIn()){
     	window.location = "login.html";
     }
-    $('#footer').hide();
-    $('#backButton').hide();
 }

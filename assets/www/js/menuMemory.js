@@ -1,10 +1,9 @@
-var leaguesList = {};
 menuMemory = 
 	{
-		load : function(){
-			leaguesList = getLocalKey('menuMemoryLeagues');
+		load : function(itemName){
+			return $.parseJSON(storage.getLocalKey('mem' + itemName));
 		},
-		save : function(){
-			setLocalKey('menuMemoryLeagues', leaguesList);
+		save : function(itemName, item){
+			storage.setLocalKey('mem' + itemName, JSON.stringify(item));
 		}
 	};

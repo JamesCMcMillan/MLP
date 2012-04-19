@@ -14,7 +14,11 @@
 	<script src="js/lib/sync.js"></script>
 	<script src="js/lib-sync.js"></script>
 	<script src="js/menuMemory.js"></script>
+	<script src="js/lib/eachFunc.js"></script>
+	<script src="js/lib/menuCacher.js"></script>
+	<script src="js/framework/stacktrace.js"></script>
 	<script type="text/javascript">
+		storage.setLocalKey("hostUrl",'http://mlpong.herokuapp.com/');
 		var myScroll;
 		function loaded() {
 			setTimeout(function () {
@@ -27,30 +31,38 @@
 		    $.mobile.allowCrossDomainPages = true;
 		});
 		document.addEventListener("deviceready", onDeviceReady, false);
-		jumpToScreen = storage.getLocalKey("jumpTo");
-		switch(jumpToScreen){
-			case "seasons":
-				loadSeasons();
-				break;
-			case "games":
-				loadGames();
-				break;
-			case "teams":
-				loadTeams();
-				break;
-			default:
-				loadLeagues();
-		}
-		storage.removeLocalKey("jumpTo");
+		
+		$(document).ready(function(){
+			jumpToScreen = storage.getLocalKey("jumpTo");
+			switch(jumpToScreen){
+				case "seasons":
+					loadSeasons();
+					break;
+				case "games":
+					loadGames();
+					break;
+				case "teams":
+					loadTeams();
+					break;
+				case "players":
+					loadPlayers();
+					break;
+				default:
+					loadLeagues();
+			}
+			storage.removeLocalKey("jumpTo");
+		});
+		
 	</script>
 </head>
 <body>
 <div data-role="page" id="page">
 	<div data-role="header" data-theme="b">
 		<a id='backButton' data-icon="arrow-l" style='display:none;' class="ui-btn-left"></a>
+		<img id='loader' src='css/images/ajax-loader.png'>
 		<a id='logout' onclick="user.logOut()" class='ui-btn-right'>LogOut</a>
 		<a id='newGame' onclick='goToGamePage()' 
-						data-icon='plus' style='display:none;' data-iconpos='right' class='ui-btn-right'>New Game</a>
+					data-icon='plus' style='display:none;' data-iconpos='right' class='ui-btn-right'>New Game</a>
 		<h1></h1>	
 	</div><!-- /header -->
 
