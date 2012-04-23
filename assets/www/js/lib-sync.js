@@ -88,10 +88,7 @@ function loadTeams(){
 		url : storage.getLocalKey('hostUrl') + season_url + '/teams.json',
 		success : function(data) {
 			if (JSON.stringify(data) != JSON.stringify(menuMemory.load('teams'+season_id))){
-				console.log("teams have changed!");
-				$('#contentList').empty();
 				eachFunc.teams(data);
-				$('#contentList').listview('refresh');
 				menuMemory.save('teams'+season_id, data);
 			}
 		}
@@ -123,9 +120,7 @@ function loadPlayers(){
 		url : storage.getLocalKey('hostUrl') + season_url + '/players.json',
 		success : function(data) {
 			if (JSON.stringify(data) != JSON.stringify(menuMemory.load('players'+season_id))){
-				$('#contentList').empty();
 				eachFunc.players(data);
-				$('#contentList').listview('refresh');
 				menuMemory.save('players'+season_id, data);
 			}
 		}
@@ -149,9 +144,7 @@ function loadGames(){
 		url : storage.getLocalKey('hostUrl') + season_url + '/games.json',
 		success : function(data) {
 			if (JSON.stringify(data) != JSON.stringify(menuMemory.load('games'+season_id))){
-				$('#contentList').empty();
 				eachFunc.games(data);
-				$('#contentList').listview('refresh');
 				menuMemory.save('games'+season_id, data);
 			}
 		}
@@ -175,14 +168,12 @@ function loadLeagues(){
 	$('#newGame').hide();
 	
 	menuCacher.loadMenu('leagues','leagues');
+	
 	$.ajax({
 		url:storage.getLocalKey('hostUrl') + '/leagues.json',
 		success:function(data){
 			if (JSON.stringify(data) != JSON.stringify(menuMemory.load('leagues'))){
-				alert("Change in leagues!");
-				$('#contentList').empty();
 				eachFunc.leagues(data);
-				$('#contentList').listview('refresh');
 				menuMemory.save('leagues', data);
 			}
 		}
@@ -201,13 +192,12 @@ function loadSeasons() {
 		url : storage.getLocalKey('hostUrl') + league_url + '.json',
 		success : function(data) {
 			if (JSON.stringify(data.seasons) != JSON.stringify(menuMemory.load('seasons'+league_id))){
-				$('#contentList').empty();
 				eachFunc.seasons(data.seasons);
-				$('#contentList').listview('refresh');
 				menuMemory.save('seasons'+league_id, data.seasons);
 			}
 		}
 	});
+	
 	$("#backButton .ui-btn-text").text("Leagues");
 	$('#backButton').click(function(){loadLeagues();}).show().button();
 	$('#newGame').hide();

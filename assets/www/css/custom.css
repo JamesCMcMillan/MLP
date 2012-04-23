@@ -31,7 +31,7 @@
 	padding-top:10px;
 	position:absolute; z-index:1;
 	top:40px; bottom:0px; left:0;
-	width:91%;
+	width:100%;
 	overflow:auto;
 	padding:0px;
 	height:100%;
@@ -64,3 +64,16 @@ h3{
 	margin:0px;
 	display:none;
 }
+#gameDiv{
+	height:100%;
+	min-height:100%;
+}
+ .cupHit{
+ 	font-size:2em;
+ }
+ .playerimage{
+  	height:80px;
+  	padding-top:15px;
+  	margin-left:auto;
+  	margin-right:auto;
+  }

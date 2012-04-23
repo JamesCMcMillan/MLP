@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns = "http://www.w3.org/ns/widgets"
+	xmlns:gap= "http://phonegap.com/ns/1.0"
+	id	= "com.herokuapp.mlpong"
+	version = "1.0.0">
+
+	<name>Major League Pong</name>
+
+	<description>
+		A scoring app for use with MajorLeaguePong leagues
+	</description>
+
+	<author href=""
+		email="j.c.mcmillan@gmail.com">
+		James McMillan
+	</author>
+
+	<icon src="icon.png" gap:role="default" />
+
+	<feature name="http://api.phonegap.com/1.0/file"/>
+	<feature name="http://api.phonegap.com/1.0/media"/>
+	<feature name="http://api.phonegap.com/1.0/network"/>
+	<feature name="http://api.phonegap.com/1.0/notification"/>
+
+	<preference name="orientation" value="default" />
+	
+	<gap:splash src="/assets/www/css/images/icon.png" />
+</widget>

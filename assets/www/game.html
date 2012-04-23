@@ -11,6 +11,8 @@
 	<script src="js/framework/jquery-iscroll.js"></script>
 	<script src="js/lib/storage.js"></script>
 	<script src="js/lib/game.js"></script>
+	<script src="js/classes/Game.js"></script>
+	<script src="js/classes/Shot.js"></script>
 	<script src="js/lib/createGame.js"></script>
 	<script src="js/lib/user.js"></script>
 	<script src="js/lib/sync.js"></script>
@@ -32,10 +34,11 @@ var bringBackCounter; // 0 - 3, how many shots in a row have been made by a team
 var awayTeamObject = new Object();
 var homeTeamObject = new Object();
 var rawGameObject = new Object();
+var mostRecentShotId; // for populating undos
 loadGame();
 </script>
 </head>
-<body>
+<body class='maxHeight'>
 <div data-role="page" class='maxHeight'>
 	<div data-role="header">
 		<h1 id='h1header' style='display:none;'><span id='currentCupLabel'>0</span>/10</h1>
@@ -61,38 +64,38 @@ loadGame();
 		</div>
 		<div class="ui-grid-b" id='gameDiv' style='display:none;'>
 			<div id='player1div' class="ui-block-a center maxHeight">
-				<img id='player1image' style="height:80px;margin-left:auto;margin-right:auto;" />
+				<img id='player1image' class='playerimage' />
 				<div id="first_player"></div>
 				<div id='player1buttonsdiv'>
 					<a id='player1hit' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Hit</a>
 					<a id='player1miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
 				</div>
 				<div id='player1undodiv'>
-					<div id='player1cup'></div>
+					<div id='player1cup' class='cupHit'></div>
 					<a id='player1undo' data-role="button" class='overflow' data-inline="true">Undo</a>
 				</div>
 			</div>
 			<div id='player2div' class="ui-block-b center maxHeight">
-				<img id='player2image' style="height:80px;margin-left:auto;margin-right:auto;" />
+				<img id='player2image' class='playerimage' />
 				<div id="second_player"></div>
 				<div id='player2buttonsdiv'>
 					<a id='player2hit' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Hit</a>
 					<a id='player2miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
 				</div>
 				<div id='player2undodiv'>
-					<div id='player2cup'></div>
+					<div id='player2cup'  class='cupHit'></div>
 					<a id='player2undo' data-role="button" class='overflow' data-inline="true">Undo</a>
 				</div>
 			</div>
 			<div id='player3div' class="ui-block-c center maxHeight">
-				<img id='player3image' style="height:80px;margin-left:auto;margin-right:auto;" />
+				<img id='player3image' class='playerimage' />
 				<div id="third_player"></div>
 				<div id='player3buttonsdiv'>
 					<a id='player3hit' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Hit</a>
 					<a id='player3miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
 				</div>
 				<div id='player3undodiv'>
-					<div id='player3cup'></div>
+					<div id='player3cup' class='cupHit'></div>
 					<a id='player3undo' data-role="button" data-inline="true" class='overflow'>Undo</a>
 				</div>
 			</div>

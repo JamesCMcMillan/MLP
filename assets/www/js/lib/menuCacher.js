@@ -4,7 +4,6 @@ menuCacher =
 			console.log("@loadMenu");
 			list = menuMemory.load(menuId);
 			if (null != list){
-				$('#contentList').empty();
 				console.log("there is a cache: " + JSON.stringify(list));
 				switch(menuType){
 					case "leagues":
@@ -22,13 +21,14 @@ menuCacher =
 					case "games":
 						console.log("using menu type games");
 						eachFunc.games(list);
+						break;
 					case "players":
 						console.log("using menu type players");
 						eachFunc.players(list);
+						break;
 					default:
 						break;
 				}
-				$('#contentList').listview('refresh');
 			}
 		}
 	};

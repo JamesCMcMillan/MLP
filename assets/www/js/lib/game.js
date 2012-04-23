@@ -14,6 +14,7 @@ function shotFiredUIAction(player){
 	$('#' + player + 'div').addClass('shotbg');
 	$('#' + player + 'buttonsdiv').hide();
 	$('#' + player + 'undodiv').show();
+	$('#' + player + 'undo').unbind('click').click(function(){undoShot(mostRecentShotId, player)});
 }
 
 function teamUp(){
@@ -38,29 +39,28 @@ function teamUp(){
 		
 		$('#player1hit').click(function(){
 									shotFiredUIAction('player1');
-									addShot('hit',homeTeamObject.players[0].id, homeTeamObject.id);
+									addShot('hit',homeTeamObject.players[0].id, homeTeamObject.id, 'player1');
 								});
 		$('#player2hit').click(function(){
 									shotFiredUIAction('player2');									
-									addShot('hit',homeTeamObject.players[1].id, homeTeamObject.id);
+									addShot('hit',homeTeamObject.players[1].id, homeTeamObject.id, 'player2');
 								});
 		$('#player3hit').click(function(){
 									shotFiredUIAction('player3');
-									addShot('hit',homeTeamObject.players[2].id, homeTeamObject.id);
+									addShot('hit',homeTeamObject.players[2].id, homeTeamObject.id, 'player3');
 								});
 		
 		$('#player1miss').click(function(){
 									shotFiredUIAction('player1');
-									
-									addShot('miss',homeTeamObject.players[0].id, homeTeamObject.id);
+									addShot('miss',homeTeamObject.players[0].id, homeTeamObject.id, 'player1');
 								});
 		$('#player2miss').click(function(){
 									shotFiredUIAction('player2');									
-									addShot('miss',homeTeamObject.players[1].id, homeTeamObject.id);
+									addShot('miss',homeTeamObject.players[1].id, homeTeamObject.id, 'player2');
 								});
 		$('#player3miss').click(function(){
 									shotFiredUIAction('player3');
-									addShot('miss',homeTeamObject.players[2].id, homeTeamObject.id);
+									addShot('miss',homeTeamObject.players[2].id, homeTeamObject.id, 'player3');
 								});
 	}else{ 
 		$('#currentCupLabel').text(awayTeamObject.currentCup);
@@ -75,35 +75,34 @@ function teamUp(){
 		
 		$('#player1hit').click(function(){
 									shotFiredUIAction('player1');									
-									addShot('hit',awayTeamObject.players[0].id, awayTeamObject.id);
+									addShot('hit',awayTeamObject.players[0].id, awayTeamObject.id, 'player1');
 								});
 		$('#player2hit').click(function(){
 									shotFiredUIAction('player2');									
-									addShot('hit',awayTeamObject.players[1].id, awayTeamObject.id);
+									addShot('hit',awayTeamObject.players[1].id, awayTeamObject.id, 'player2');
 								});
 		$('#player3hit').click(function(){
 									shotFiredUIAction('player3');
-									addShot('hit',awayTeamObject.players[2].id, awayTeamObject.id);
+									addShot('hit',awayTeamObject.players[2].id, awayTeamObject.id, 'player3');
 								});
 		
 		$('#player1miss').click(function(){									
 									shotFiredUIAction('player1');
-									addShot('miss',awayTeamObject.players[0].id, awayTeamObject.id);
+									addShot('miss',awayTeamObject.players[0].id, awayTeamObject.id, 'player1');
 								});
 		$('#player2miss').click(function(){
 									shotFiredUIAction('player2');
-									addShot('miss',awayTeamObject.players[1].id, awayTeamObject.id);
+									addShot('miss',awayTeamObject.players[1].id, awayTeamObject.id, 'player2');
 								});
 		$('#player3miss').click(function(){
 									shotFiredUIAction('player3');									
-									addShot('miss',awayTeamObject.players[2].id, awayTeamObject.id);
+									addShot('miss',awayTeamObject.players[2].id, awayTeamObject.id, 'player3');
 								});
 	}
 }
 
 function loadGame(){
 	console.log("@loadGame");
-	alert(storage.getLocalKey('hostUrl') + storage.getLocalKey('currentSeasonUrl') + '/games/' + rawGameObject.id + '?auth_token=' + storage.getLocalKey('authToken'));
 	$.ajax({
 		url : storage.getLocalKey('hostUrl') + storage.getLocalKey('currentGameUrl') + '.json',
 		success : function(data) {
@@ -114,7 +113,7 @@ function loadGame(){
 			homeTeamObject.currentCup = 1;
 			awayTeamObject.currentCup = 1;
 			
-			newGame = new game(
+			newGame = new Game(
 					storage.getLocalKey('currentLeagueSlug'),
 					storage.getLocalKey('currentSeasonId'),
 					data.date,
@@ -142,7 +141,7 @@ function loadGame(){
 			$('#home_shoots_first').click(function(){shootsFirst('home');});
 			$('#away_shoots_first').click(function(){shootsFirst('away');});
 			console.log("team data for Who Shoots First loaded");
-			thisGame.rounds_attributes = {};
+			thisGame.game.rounds_attributes = {};
 		}
 	});
 }
@@ -153,8 +152,8 @@ function newRound(){
 	currentRound = d.getTime().toString();
 	roundCount++;
 	console.log("new round:" + currentRound + " is the #" + roundCount + " round");
-	thisGame.rounds_attributes[currentRound] = {
-			'number' : roundCount,
+	thisGame.game.rounds_attributes[currentRound] = {
+			'number' : roundCount+"",
 			'shots_attributes' : {}
 	};
 	shotsInRound = 0;
@@ -162,7 +161,25 @@ function newRound(){
 	//alert("new round: shotsInRound = 0");
 }
 
-function addShot(hitOrMiss, player_id, team_id){
+function undoShot(shot_id, player){
+	console.log('@undoShot(' + shot_id + ', ' + player + ')');
+	lastShot = thisGame.game.rounds_attributes[currentRound].shots_attributes[shot_id];
+	//alert(JSON.stringify(lastShot));
+	
+	var curTeamObject = (homeAway == 'home') ? homeTeamObject : awayTeamObject;
+	shotsInRound--;
+	if (lastShot.cup != '0' && lastShot.cup != null){
+		curTeamObject.currentCup--;
+		bringBackCounter--;	
+	}
+	
+	delete thisGame.game.rounds_attributes[currentRound].shots_attributes[shot_id];
+	$('#' + player + 'div').removeClass('shotbg');
+	$('#' + player + 'buttonsdiv').show();
+	$('#' + player + 'undodiv').hide();
+}
+
+function addShot(hitOrMiss, player_id, team_id, playerNumber){
 	console.log("@addShot");
 	
 	var curTeamObject = (homeAway == 'home') ? homeTeamObject : awayTeamObject;
@@ -174,34 +191,28 @@ function addShot(hitOrMiss, player_id, team_id){
 	if (hitOrMiss == 'hit'){
 		curTeamObject.currentCup++;
 		bringBackCounter++;
-		//alert("bringBackCounter = " + bringBackCounter);
+		$('#' + playerNumber + "cup").text(cup);
 		console.log("player " + player_id + " hit " + cup + " cup");
 	}else if (hitOrMiss == 'miss'){
 		console.log("player " + player_id + " missed shooting for " + currentCup + " cup");
 		cup = 0;
+		$('#' + playerNumber + "cup").text("Miss");
 	}else if (hitOrMiss == 'bringBack'){
 		cup = null;
 	}
 	
 	var d = new Date();
-	shotId = d.getTime().toString();
+	mostRecentShotId = shotId = d.getTime().toString();
 	
-	thisShot = {
-				cup: cup,
-				league_id:storage.getLocalKey('currentLeagueId'),
-				season_id:storage.getLocalKey('currentSeasonId'),
-				number: shotsInRound-1,
-				team_id:team_id,
-				player_id:player_id
-	};
-	//alert(JSON.stringify(thisShot));
+	thisShot = new Shot(cup, shotsInRound-1, team_id, player_id);
+
 	console.log(JSON.stringify(thisShot));
-	eval("thisGame.rounds_attributes['" + currentRound + "'].shots_attributes['" + shotId + "'] = thisShot;");
+	thisGame.game.rounds_attributes[currentRound].shots_attributes[shotId] = thisShot.shot;
 	console.log("This game:   " + JSON.stringify(thisGame));
 	console.log("added thisShot onto current round");
 	
 	if (bringBackCounter == 3){
-		alert("Bring 'em back!");
+		//alert("Bring 'em back!");
 		console.log("Bring 'em back!");
 		bringBackCounter = 0;
 		if (shotsInRound == 6){
@@ -239,7 +250,7 @@ function addShot(hitOrMiss, player_id, team_id){
 	if (cup == 10){
 		alert("End of game!");
 		console.log("Game Data: " + JSON.stringify(thisGame));
-		alert("Game Data: " + JSON.stringify(thisGame));
+		//alert("Game Data: " + JSON.stringify(thisGame));
 		$.ajax({
 			type : 'PUT',
 			url : storage.getLocalKey('hostUrl') + storage.getLocalKey('currentSeasonUrl') + '/games/' + rawGameObject.id + '?auth_token=' + storage.getLocalKey('authToken'),
