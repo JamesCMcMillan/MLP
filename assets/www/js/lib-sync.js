@@ -11,7 +11,7 @@ $.ajaxSetup({
 	dataType : 'json',
 	type : 'GET',
 	error : function(data) {
-		alert("Error reaching server:" + JSON.stringify(data));
+		//alert("Error reaching server:" + JSON.stringify(data));
 	}
 });
 
@@ -33,6 +33,7 @@ function loadAllTeams(){
 			$("#home_team,#away_team").html(options).selectmenu("refresh").change(function(){loadAllUsers();});
 		}
 	});	
+	$('#game_time').live('change',function(){setTimeout("$('#teamPickers').show()",400);});
 }
 
 function loadAllUsers(){

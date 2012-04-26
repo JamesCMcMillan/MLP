@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>MLPong</title>
+	<script type="text/javascript" charset="utf-8" src="../js/phonegap-1.4.1.js"></script>
+	<link rel="stylesheet" href="../css/jquery.css" />
+	<link rel="stylesheet" href="../css/custom.css" />
+	<script src="../js/framework/jquery.js"></script>
+	<script src="../js/framework/jquery-mobile.js"></script>
+	<script src="../js/framework/jquery-iscroll.js"></script>
+	<script src="../js/lib/storage.js"></script>
+	<script src="../js/lib/user.js"></script>
+	<script src="../js/lib/sync.js"></script>
+	<script src="../js/lib-sync.js"></script>
+	<script src="../js/menuMemory.js"></script>
+	<script>
+		function goBack(){
+			storage.setLocalKey('jumpTo','players');
+			window.location = 'index.html';
+		}
+	
+		$(document).ready(function(){
+			preplayer = storage.getLocalKey('currentPlayerInfo');
+			player = $.parseJSON(preplayer);
+			$('#point_percentage').text(player.point_percentage);
+			$('#hit_percentage').text(player.hit_percentage);
+			$('#last_cups').text(player.last_cups);
+			$('#shot_count').text(player.shot_count);
+			$('#hit_count').text(player.hit_count);
+			$('#wins').text(player.wins);
+			$('#losses').text(player.losses);
+		
+			if (player.story != null && player.story != ""){
+				$('#story').text(player.story);
+			}
+			$('#title').text(player.name);
+			$('#avatar').attr('src',user.getGravatarURL(player.email_hash));
+		});
+	</script>
+	</head>
+<body>
+<div data-role="page" id="page">
+	<div data-role="header" data-theme="b">
+		<a onclick='goBack();' id='backButton' data-icon="arrow-l" class="ui-btn-left">Players</a>
+		<h1></h1>
+	</div><!-- /header -->
+	<div id='mainPage' data-role="content">
+	<div class='center'>
+		<h3 id='title'></h3>
+		<img id='avatar' src='' />
+		<p id='story'></p>
+	</div>
+		<table style='width:90%'>
+			<tr>
+				<td>Point Percentage</td>
+				<td id='point_percentage' class='right'></td>
+			</tr>
+			<tr>
+				<td>Hit Percentage</td>
+				<td id='hit_percentage' class='right'></td>
+			</tr>
+			<tr>
+				<td>Last Cups</td>
+				<td id='last_cups' class='right'></td>
+			</tr>
+			<tr>
+				<td>Shot Count</td>
+				<td id='shot_count' class='right'></td>
+			</tr>
+			<tr>
+				<td>Hit Count</td>
+				<td id='hit_count' class='right'></td>
+			</tr>
+			<tr>
+				<td>Wins</td>
+				<td id='wins' class='right'></td>
+			</tr>
+			<tr>
+				<td>Losses</td>
+				<td id='losses' class='right'></td>
+			</tr>
+		</table>
+	</div><!-- /content -->
+</div><!-- /page -->
+</body>
+</html>

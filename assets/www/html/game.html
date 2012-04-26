@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Game</title>
+	<script type="text/javascript" charset="utf-8" src="../js/framework/phonegap-1.4.1.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../js/framework/phonegap-toast.js"></script>
+	<link rel="stylesheet" href="../css/jquery.css" />
+	<link rel="stylesheet" href="../css/custom.css" />
+	<script src="../js/framework/jquery.js"></script>
+	<script src="../js/framework/jquery-mobile.js"></script>
+	<script src="../js/framework/jquery-iscroll.js"></script>
+	<script src="../js/lib/storage.js"></script>
+	<script src="../js/pages/game.js"></script>
+	<script src="../js/classes/Game.js"></script>
+	<script src="../js/classes/Shot.js"></script>
+	<script src="../js/pages/createGame.js"></script>
+	<script src="../js/lib/user.js"></script>
+	<script src="../js/lib-sync.js"></script>
+	<script src="../js/menuMemory.js"></script>
+<script>
+$( document ).bind( "mobileinit", function() {
+	$.support.cors = true;
+    $.mobile.allowCrossDomainPages = true;
+});
+document.addEventListener("deviceready", onDeviceReady, false);
+var thisGame; // The instance of the game currently being scored
+var shotsInRound; // 1 - 6, the current number of shots thrown in round
+var currentRound; // The round ID, a string 'r##########'
+var roundCount; // the number of rounds already played
+var currentCup; // the number cup that people are shooting for
+var homeAway; // which team is currently up
+var bringBackCounter; // 0 - 3, how many shots in a row have been made by a team
+var awayTeamObject = new Object();
+var homeTeamObject = new Object();
+var rawGameObject = new Object();
+loadGame();
+</script>
+</head>
+<body class='maxHeight'>
+<div data-role="page" class='maxHeight'>
+	<div data-role="header">
+		<h1 id='h1header' style='display:none;'><span id='currentCupLabel'>0</span>/10</h1>
+		<a id='newGame' onclick='quitGame()' data-icon='delete' data-iconpos='right' class='ui-btn-right'>Cancel Game</a>
+	</div><!-- /header -->
+
+	<div id='mainGamePage' class='maxHeight' data-role="content">
+		<div id='whoStarts' class='ui-grid-a'>
+			<div id='homeTeam' class="ui-block-a center teamStartDiv">
+				<div style='overflow:auto;'>
+					<h2 id='homeTeamName'></h2>
+					<div class='center aPlayer'>
+						<img src='' class='circle' id='player1circle' />
+							<div id='player1'></div>
+					</div>
+					<div class='left aPlayer'>
+						<img src='' class='circle' id='player2circle' />
+							<div id='player2'></div>
+					</div>
+					<div class='right aPlayer'>
+						<img src='' class='circle' id='player3circle' />					
+							<div id='player3'></div>
+					</div>
+				</div>
+				<hr />
+				<br />
+				<a id='home_shoots_first' data-role='button' data-inline="true" class='overflow' style='font-size:1em;'>Shoots First</a>
+			</div><!-- homeTeam -->
+				
+			<div id='awayTeam' class='ui-block-b center teamStartDiv'>
+				<div style='overflow:auto;'>
+					<h2 id='awayTeamName'></h2>
+					<div class='center aPlayer'>
+						<img src='' class='circle' id='player4circle' />
+							<div id='player4'></div>
+					</div>
+					<div class='left aPlayer'>
+						<img src='' class='circle' id='player5circle' />
+							<div id='player5'></div>
+					</div>
+					<div class='right aPlayer'>
+						<img src='' class='circle' id='player6circle' />					
+							<div id='player6'></div>
+					</div>
+				</div>
+				<br />
+				<a id='away_shoots_first' data-role='button' data-inline="true" class='overflow' style='font-size:1em;'>Shoots First</a>
+			</div><!-- awayTeam -->
+		</div>
+		
+		<div class="ui-grid-b" id='gameDiv' style='display:none;'>
+			<div id='player1div' class="ui-block-a center maxHeight">
+				<img id='player1image' class='playerimage' />
+				<div id="first_player"></div>
+				<div id='player1buttonsdiv'>
+					<a id='player1hit' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Hit</a>
+					<a id='player1miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
+				</div>
+				<div id='player1undodiv'>
+					<div id='player1cup' class='cupHit'></div>
+					<a id='player1undo' data-role="button" class='overflow' data-inline="true">Undo</a>
+				</div>
+			</div>
+			<div id='player2div' class="ui-block-b center maxHeight">
+				<img id='player2image' class='playerimage' />
+				<div id="second_player"></div>
+				<div id='player2buttonsdiv'>
+					<a id='player2hit' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Hit</a>
+					<a id='player2miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
+				</div>
+				<div id='player2undodiv'>
+					<div id='player2cup'  class='cupHit'></div>
+					<a id='player2undo' data-role="button" class='overflow' data-inline="true">Undo</a>
+				</div>
+			</div>
+			<div id='player3div' class="ui-block-c center maxHeight">
+				<img id='player3image' class='playerimage' />
+				<div id="third_player"></div>
+				<div id='player3buttonsdiv'>
+					<a id='player3hit' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Hit</a>
+					<a id='player3miss' class='hitOrMissButton' data-role="button" data-inline="true" class='overflow'>Miss</a>
+				</div>
+				<div id='player3undodiv'>
+					<div id='player3cup' class='cupHit'></div>
+					<a id='player3undo' data-role="button" data-inline="true" class='overflow'>Undo</a>
+				</div>
+			</div>
+		</div><!-- /grid-b -->
+	</div><!-- /content -->
+</div><!-- /page -->
+</body>
+</html>

@@ -10,6 +10,6 @@ public class App extends DroidGap {
     	super.setIntegerProperty("loadUrlTimeoutValue", 60000);
     	super.onCreate(savedInstanceState);
     	super.setIntegerProperty("splashscreen", R.drawable.splash);
-        super.loadUrl("file:///android_asset/www/index.html");
+        super.loadUrl("file:///android_asset/www/html/index.html");
     }
 }

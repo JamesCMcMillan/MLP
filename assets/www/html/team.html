@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>MLPong</title>
+	<script type="text/javascript" charset="utf-8" src="../js/phonegap-1.4.1.js"></script>
+	<link rel="stylesheet" href="../css/jquery.css" />
+	<link rel="stylesheet" href="../css/custom.css" />
+	<script src="../js/framework/jquery.js"></script>
+	<script src="../js/framework/jquery-mobile.js"></script>
+	<script src="../js/framework/jquery-iscroll.js"></script>
+	<script src="../js/lib/storage.js"></script>
+	<script src="../js/lib/user.js"></script>
+	<script src="../js/lib/sync.js"></script>
+	<script src="../js/lib-sync.js"></script>
+	<script src="../js/menuMemory.js"></script>
+	<script>
+		function goBack(){
+			storage.setLocalKey('jumpTo','teams');
+			window.location = 'index.html';
+		}
+		
+		// Disabled because we are caching it from teams listing page 
+		/*
+		$.ajax({
+			url : storage.getLocalKey('hostUrl') + storage.getLocalKey('currentSeasonUrl')
+					+ '/teams/' + storage.getLocalKey('currentTeamId') + '.json',
+			success : function(data) {
+			*/
+			
+		$(document).ready(function(){
+			preteam = storage.getLocalKey('currentTeamInfo');
+			team = $.parseJSON(preteam);
+			
+			$('#point_percentage').text(team.point_percentage);
+			$('#hit_percentage').text(team.hit_percentage);
+			$('#shot_count').text(team.shot_count);
+			$('#hit_count').text(team.hit_count);
+			$('#wins').text(team.wins);
+			$('#losses').text(team.losses);
+			
+			$('#player1').text(team.players[0].name).click(function(){loadPlayer(team.players[0].id);});
+			$('#player2').text(team.players[1].name).click(function(){loadPlayer(team.players[1].id);});
+			$('#player3').text(team.players[2].name).click(function(){loadPlayer(team.players[2].id);});
+			
+			$('#player1avatar').attr('src',user.getGravatarURL(team.players[0].email_hash))
+							   .click(function(){loadPlayer(team.players[0].id);});
+			$('#player2avatar').attr('src',user.getGravatarURL(team.players[1].email_hash))
+							   .click(function(){loadPlayer(team.players[1].id);});
+			$('#player3avatar').attr('src',user.getGravatarURL(team.players[2].email_hash))
+							   .click(function(){loadPlayer(team.players[2].id);});
+		
+			if (team.story != null && team.story != ""){
+				$('#story').text(team.story);
+			}
+			$('#title').text(team.name);
+			
+		});
+			
+			
+				/*}
+			});*/
+	</script>
+	</head>
+<body>
+<div data-role="page" id="page">
+	<div data-role="header" data-theme="b">
+		<a onclick='goBack();' id='backButton' data-icon="arrow-l" class="ui-btn-left">Teams</a>
+		<h1></h1>
+	</div><!-- /header -->
+	<div id='mainPage' data-role="content">
+		<h3 id='title' class='center'></h3>
+		<p id='story' class='center'></p>
+		<table class='center'>
+			<tr>
+				<td><img id='player1avatar' src='' /></td>
+				<td><img id='player2avatar' src='' /></td>
+				<td><img id='player3avatar' src='' /></td>
+			</tr>
+			<tr>
+				<td id='player1'></td>
+				<td id='player2'></td>
+				<td id='player3'></td>
+			</tr>
+		</table>
+		<br />
+		<table style='width:90%;'>
+			<tr>
+				<td>Point Percentage</td>
+				<td id='point_percentage' class='right'></td>
+			</tr>
+			<tr>
+				<td>Hit Percentage</td>
+				<td id='hit_percentage' class='right'></td>
+			</tr>
+			<tr>
+				<td>Shot Count</td>
+				<td id='shot_count' class='right'></td>
+			</tr>
+			<tr>
+				<td>Hit Count</td>
+				<td id='hit_count' class='right'></td>
+			</tr>
+			<tr>
+				<td>Wins</td>
+				<td id='wins' class='right'></td>
+			</tr>
+			<tr>
+				<td>Losses</td>
+				<td id='losses' class='right'></td>
+			</tr>
+		</table>
+	</div><!-- /content -->
+</div><!-- /page -->
+</body>
+</html>
