@@ -13,7 +13,9 @@ function shootsFirst(homeOrAway){
 function shotFiredUIAction(player){
 	$('#' + player + 'div').addClass('shotbg');
 	$('#' + player + 'buttonsdiv').hide();
+	$('.undobutton').hide();
 	$('#' + player + 'undodiv').show();
+	$('#' + player + 'undo').show();
 }
 
 function teamUp(){
