@@ -18,10 +18,24 @@
 			storage.setLocalKey('jumpTo','players');
 			window.location = 'index.html';
 		}
-	
+
 		$(document).ready(function(){
+			var player = null;
 			preplayer = storage.getLocalKey('currentPlayerInfo');
-			player = $.parseJSON(preplayer);
+			playerId = storage.getLocalKey('currentPlayerId');
+			if (preplayer == 'undefined'){
+				season_url = storage.getLocalKey('currentSeasonUrl');
+				$.ajax({
+					url : storage.getLocalKey('hostUrl') + season_url + '/players/' + playerId + '.json',
+					success : function(data) {
+						populate(data);
+					}
+				});	
+			}else{
+				populate($.parseJSON(preplayer));
+			}
+		});
+		function populate(player){
 			$('#point_percentage').text(player.point_percentage);
 			$('#hit_percentage').text(player.hit_percentage);
 			$('#last_cups').text(player.last_cups);
@@ -35,7 +49,7 @@
 			}
 			$('#title').text(player.name);
 			$('#avatar').attr('src',user.getGravatarURL(player.email_hash));
-		});
+		}
 	</script>
 	</head>
 <body>

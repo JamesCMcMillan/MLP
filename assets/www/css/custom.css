@@ -108,4 +108,9 @@ h3{
 .tinyImg{
 	height:25px;
 	width:25px;
+}
+#teamName{
+	padding-top:2px;
+	padding-bottom:0px;
+	margin:0px;
 }​

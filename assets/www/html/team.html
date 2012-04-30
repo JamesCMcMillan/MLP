@@ -19,14 +19,6 @@
 			window.location = 'index.html';
 		}
 		
-		// Disabled because we are caching it from teams listing page 
-		/*
-		$.ajax({
-			url : storage.getLocalKey('hostUrl') + storage.getLocalKey('currentSeasonUrl')
-					+ '/teams/' + storage.getLocalKey('currentTeamId') + '.json',
-			success : function(data) {
-			*/
-			
 		$(document).ready(function(){
 			preteam = storage.getLocalKey('currentTeamInfo');
 			team = $.parseJSON(preteam);
@@ -38,9 +30,9 @@
 			$('#wins').text(team.wins);
 			$('#losses').text(team.losses);
 			
-			$('#player1').text(team.players[0].name).click(function(){loadPlayer(team.players[0].id);});
-			$('#player2').text(team.players[1].name).click(function(){loadPlayer(team.players[1].id);});
-			$('#player3').text(team.players[2].name).click(function(){loadPlayer(team.players[2].id);});
+			$('#player1').text(team.players[0].name).click(function(){loadPlayer(team.players[0].id,team.players[0]);});
+			$('#player2').text(team.players[1].name).click(function(){loadPlayer(team.players[1].id,team.players[1]);});
+			$('#player3').text(team.players[2].name).click(function(){loadPlayer(team.players[2].id,team.players[2]);});
 			
 			$('#player1avatar').attr('src',user.getGravatarURL(team.players[0].email_hash))
 							   .click(function(){loadPlayer(team.players[0].id);});
